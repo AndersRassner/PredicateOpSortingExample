@@ -1,5 +1,6 @@
 package PredicateOpSortingExample;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 
@@ -22,18 +23,16 @@ public class Configurator3000Testdrive {
         };
         
         try {
-            applyOps(configOps, deleteAFirst);
-            applyOps(configOps, createBFirst);
-            applyOps(configOps);
+            applyOps(configOps, Optional.of(deleteAFirst));
+            applyOps(configOps, Optional.of(createBFirst));
+            applyOps(configOps, Optional.empty());
         } catch(Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private static void applyOps(ConfigurationOp[] ops) throws Exception {
-        applyOps(ops, (ConfigurationOp) -> {return true;});
-    }
-    private static void applyOps(ConfigurationOp[] ops, Predicate<ConfigurationOp> pred) throws Exception {
+    private static void applyOps(ConfigurationOp[] ops, Optional<Predicate<ConfigurationOp>> predOptional) throws Exception {
+        Predicate<ConfigurationOp> pred = predOptional.orElse((ConfigurationOp) -> {return true;});
         int i = 0;
         for(ConfigurationOp op : ops) {
             if(op.getOpDone()) {
